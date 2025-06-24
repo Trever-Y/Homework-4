@@ -9,19 +9,78 @@ editor: visual
 
 Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
 
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+## Task 1: Conceptual Questions
 
 ```{r}
-1 + 1
+#Create a list with the requested questions
+my_list <- list("1. What is the purpose of the lapply() function? What is the equivalent purrr function?",
+"2. Suppose we have a list called my_list. Each element of the list is a numeric data frame (all columns
+are numeric). We want use lapply() to run the code cor(numeric_matrix, method = kendall)
+on each element of the list. Write code to do this below! (I’m really trying to ask you how you specify
+method = kendall when calling lapply())",
+"3. What are two advantages of using purrr functions instead of the BaseR apply family?",
+"4. What is a side-effect function?",
+"5. Why can you name a variable sd in a function and not cause any issues with the sd function?")
+
+#print the questions/list
+my_list
 ```
 
-You can add options to executable code like this
+### Question 1
+
+lapply() is used to apply functions across many rows/columns and the "l" ensures R always outputs a list.
+
+### Question 2
+
+```{r}
+
+```
+
+### Question 3
+
+Two advantages of using `purr` functions instead of `BaseR` apply family are: 1. Greater consistency between functions. For example, you can predict the output type exclusively from the function name, which isn't always true for `BaseR` apply functions. 2. `Purr` also has some functions to fill in some gaps such as `imap()` where you can map simultaneously over `x` and its indices.
+
+### Question 4
+
+A side-effect function does something beyond it's function return value. For example, write files to a disk. If we want the side effect of `hist` (which is the visual part) we can use the `walk()` function to only print the histogram.
+
+### Question 5
+
+We can name a variable `sd` in a function and not cause any issues with the `sd` function because functions have their own temporary environment. So, once the function executes, all variables within that function are "gone" or in other words, not saved to the main environment.
+
+
+## Task 2: Writing R Functions
+
+### Question 1
+
+
+### Question 2
+
+
+### Question 3
+
+
+### Question 4
+
+
+### Question 6
+
+
+### Question 6
 
 ```{r}
 #| echo: false
 2 * 2
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+## Task 3: Querying an API and a Tidy-Style Function
+
+### Question 1
+
+
+### Question 2
+
+
+### Question 3
+
+
