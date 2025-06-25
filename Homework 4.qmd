@@ -16,14 +16,20 @@ library(tidyverse)
 
 ```{r}
 #Create a list with the requested questions
-my_list1 <- list("1. What is the purpose of the lapply() function? What is the equivalent purrr function?",
-"2. Suppose we have a list called my_list. Each element of the list is a numeric data frame (all columns
-are numeric). We want use lapply() to run the code cor(numeric_matrix, method = kendall)
-on each element of the list. Write code to do this below! (I’m really trying to ask you how you specify
+my_list1 <- list("1. What is the purpose of the lapply() function? 
+                 What is the equivalent purrr function?",
+"2. Suppose we have a list called my_list.
+Each element of the list is a numeric data frame (all columns
+are numeric). We want use lapply() to run the code
+cor(numeric_matrix, method = kendall)
+on each element of the list. Write code to do this below!
+(I’m really trying to ask you how you specify
 method = kendall when calling lapply())",
-"3. What are two advantages of using purrr functions instead of the BaseR apply family?",
+"3. What are two advantages of using purrr functions
+instead of the BaseR apply family?",
 "4. What is a side-effect function?",
-"5. Why can you name a variable sd in a function and not cause any issues with the sd function?")
+"5. Why can you name a variable sd in a function and 
+not cause any issues with the sd function?")
 
 #print the questions/list
 my_list1
@@ -192,11 +198,12 @@ my_wrapper(resp, pred, metrics = c("MAE", "RMSE"))
 #test again but with 2 NA values in resp
 resp[c(1,5)] <- NA_real_
 my_wrapper(resp, pred, metrics = "MAE")
-my_wrapper(resp, pred, metrics = "RMSE", na.rm = TRUE) #tested with specifying behavior like in #4
+my_wrapper(resp, pred, metrics = "RMSE", na.rm = TRUE) #tested excluding NA
 my_wrapper(resp, pred, metrics = c("MAE", "RMSE"))
 
 #Test by passing a data frame created in Task 1 Question 2.
 my_wrapper(df1, df1, metrics = c("MAE", "RMSE"))
+my_wrapper(resp, df1, metrics = c("MAE", "RMSE"), na.rm = TRUE)
 ```
 
 ## Task 3: Querying an API and a Tidy-Style Function
@@ -210,3 +217,7 @@ my_wrapper(df1, df1, metrics = c("MAE", "RMSE"))
 ### Question 3
 
 
+
+```{r}
+
+```
