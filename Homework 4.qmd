@@ -1,19 +1,22 @@
 ---
-title: "Homework 4"
+title: "Programming Homework 4"
 author: "Trever Yoder"
 format: pdf
 editor: visual
 ---
 
-## Quarto
+### Load Packages
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+```{r}
+library(tidyverse)
+```
+
 
 ## Task 1: Conceptual Questions
 
 ```{r}
 #Create a list with the requested questions
-my_list <- list("1. What is the purpose of the lapply() function? What is the equivalent purrr function?",
+my_list1 <- list("1. What is the purpose of the lapply() function? What is the equivalent purrr function?",
 "2. Suppose we have a list called my_list. Each element of the list is a numeric data frame (all columns
 are numeric). We want use lapply() to run the code cor(numeric_matrix, method = kendall)
 on each element of the list. Write code to do this below! (I’m really trying to ask you how you specify
@@ -23,7 +26,7 @@ method = kendall when calling lapply())",
 "5. Why can you name a variable sd in a function and not cause any issues with the sd function?")
 
 #print the questions/list
-my_list
+my_list1
 ```
 
 ### Question 1
@@ -33,7 +36,15 @@ lapply() is used to apply functions across many rows/columns and the "l" ensures
 ### Question 2
 
 ```{r}
+#create data frames
+df1 <- data.frame(a = c(1:3), b = c(4:6))
+df2 <- data.frame(x = c(7:9), y = c(10:12), z = c(13:15))
 
+#create list
+my_list <- list(df1, df2)
+
+#write/show lapply function 
+lapply(my_list, cor, method = "kendall")
 ```
 
 ### Question 3
@@ -53,24 +64,139 @@ We can name a variable `sd` in a function and not cause any issues with the `sd`
 
 ### Question 1
 
+Here I will create a function that calculates RMSE. There is an ellipses in the function to allow for additional arguments.
+
+```{r}
+getRMSE <- function(response, predicted, ...){
+  add <- list(...)
+  remove <- isTRUE(add$na.rm)
+  if (remove) {
+    dropmissing <- !is.na(response) & !is.na(predicted)
+    response <- response[dropmissing]
+    predicted <- predicted[dropmissing]
+  }
+  sqrt(mean((response-predicted)^2))
+}
+```
+
 
 ### Question 2
+
+Let's run some code to create some response values and predictions.
+
+```{r}
+set.seed(10)
+n <- 100
+x <- runif(n)
+resp <- 3 + 10*x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x))
+
+#now let's test our RMSE function using this data!
+getRMSE(resp, pred)
+
+#Add 2 missing vlaues to resp
+resp[c(1,5)] <- NA_real_
+
+#Test with and without specifying what R should do with the missing values
+getRMSE(resp, pred)
+getRMSE(resp, pred, na.rm = TRUE)
+```
 
 
 ### Question 3
 
+Let's create a similar function, except it calculates the MAE instead of the RMSE.
+
+```{r}
+getMAE <- function(response, predicted, ...){
+  add <- list(...)
+  remove <- isTRUE(add$na.rm)
+  if (remove) {
+    dropmissing <- !is.na(response) & !is.na(predicted)
+    response <- response[dropmissing]
+    predicted <- predicted[dropmissing]
+  }
+  mean(abs(response-predicted))
+}
+```
 
 ### Question 4
 
+Now let's create some data and test our MAE function using the data.
+```{r}
+set.seed(10)
+n <- 100
+x <- runif(n)
+resp <- 3 + 10*x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x))
 
-### Question 6
+#Let's test our MAE function
+getMAE(resp, pred)
+
+#Add 2 missing vlaues to resp
+resp[c(1,5)] <- NA_real_
+
+#Test with and without specifying what R should do with the missing values
+getMAE(resp, pred)
+getMAE(resp, pred, na.rm = TRUE)
+```
 
 
-### Question 6
+### Question 5
+
+Now we want to create a wrapper function that can be used to get either both metrics or a single functioned called.
 
 ```{r}
-#| echo: false
-2 * 2
+#Create the wrapper function
+my_wrapper <- function(response, predicted, metrics = c("MAE", "RMSE"), ...) {
+  if (!(is.vector(response) && is.atomic(response) && is.numeric(response))) {
+    message("Error: 'response' must be a numeric atomic vecotr.")
+    return(invisible(NULL))
+  }
+  if (!(is.vector(predicted) && is.atomic(predicted) && is.numeric(predicted))) {
+    message("Error: 'predicted' must be a numeric atomic vecotr.")
+    return(invisible(NULL))
+  }
+  
+  #create empty list for results
+  results <- list()
+  
+  #calculate metrics
+  if ("MAE" %in% toupper(metrics)) {
+    results$MAE <- getMAE(response, predicted, ...)
+  }
+  if ("RMSE" %in% toupper(metrics)) {
+    results$RMSE <- getRMSE(response, predicted, ...)
+  }
+  return(results)
+}
+  
+```
+
+### Question 6
+
+Now let's test our wrapper function in a similar way that we tested our previous functions.
+```{r}
+#create data
+set.seed(10)
+n <- 100
+x <- runif(n)
+resp <- 3 + 10*x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x))
+
+#call individually then together
+my_wrapper(resp, pred, metrics = "MAE")
+my_wrapper(resp, pred, metrics = "RMSE")
+my_wrapper(resp, pred, metrics = c("MAE", "RMSE"))
+
+#test again but with 2 NA values in resp
+resp[c(1,5)] <- NA_real_
+my_wrapper(resp, pred, metrics = "MAE")
+my_wrapper(resp, pred, metrics = "RMSE", na.rm = TRUE) #tested with specifying behavior like in #4
+my_wrapper(resp, pred, metrics = c("MAE", "RMSE"))
+
+#Test by passing a data frame created in Task 1 Question 2.
+my_wrapper(df1, df1, metrics = c("MAE", "RMSE"))
 ```
 
 ## Task 3: Querying an API and a Tidy-Style Function
