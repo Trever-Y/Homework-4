@@ -210,12 +210,16 @@ my_wrapper(resp, df1, metrics = c("MAE", "RMSE"), na.rm = TRUE)
 
 ## Task 3: Querying an API and a Tidy-Style Function
 
+
 ### Question 1
 
+Let's query the newsapi for articles on war.
+
 ```{r}
-URL_ids <- "https://newsapi.org/v2/everything?q=war&from=2025-06-25&sortBy=popularity&apiKey=93563897e7a24afaaac43bd50c70d0af"
+URL_ids <- "https://newsapi.org/v2/everything?q=war&from=2025-06-05&sortBy=popularity&apiKey=93563897e7a24afaaac43bd50c70d0af"
 id_info <- GET(URL_ids)
 
+#look at the structure
 str(id_info, max.level = 1)
 
 ```
@@ -223,27 +227,49 @@ str(id_info, max.level = 1)
 
 ### Question 2
 
+Now let's parse this data so we can actually browse some articles.
+
 ```{r}
 parsed_data <- fromJSON(rawToChar(id_info$content))
-as_tibble(parsed_data)
+my_tibble <- as_tibble(parsed_data$articles)
+my_tibble
+```
+
+If we want to see a simplified version with just the author and titles, we can do that!
+
+```{r}
+simple_tibble <- my_tibble %>%
+    select(author, title)
+
+simple_tibble
 ```
 
 
 ### Question 3
 
+Let's write a function that allows the user to easily input any title/date/key. Let's make it only output a tibble with the authors and titles to make it fast and easy to browse the articles. Finally, let's test this by searching for gamestop articles.
+
 ```{r}
 API_function <- function(title, date, key) {
+  URL_ids <- paste0(
+  "https://newsapi.org/v2/everything?",
+  "q=", title,
+  "&from=", date,
+  "&sortBy=popularity",
+  "&pageSize=100",
+  "&apiKey=", key
+)
+  id_info <- GET(URL_ids)
+  parsed_data <- fromJSON(rawToChar(id_info$content))
+  my_tibble <- as_tibble(parsed_data$articles)
   
+  #print title and authors only for fast and simple querying.
+  results <- my_tibble %>%
+    select(author, title)
+  print(results)
 }
-```
 
+#test function
+API_function("gamestop", "2025-05-27", "93563897e7a24afaaac43bd50c70d0af")
 
-```{r}
-URL_ids <- "https://newsapi.org/v2/everything?q=gamestop&from=2025-05-27&sortBy=popularity&apiKey=93563897e7a24afaaac43bd50c70d0af"
-id_info <- GET(URL_ids)
-parsed_data <- fromJSON(rawToChar(id_info$content))
-as_tibble(parsed_data)
-str(id_info, max.level = 1)
-id_info$headers
 ```
-93563897e7a24afaaac43bd50c70d0af
