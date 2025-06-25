@@ -1,7 +1,9 @@
 ---
 title: "Programming Homework 4"
 author: "Trever Yoder"
-format: pdf
+format:
+  pdf:
+    code-overflow: wrap
 editor: visual
 ---
 
@@ -10,7 +12,7 @@ editor: visual
 
 ### Load Packages and Create a List of Questions
 
-```{r}
+```{r setup, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(httr)
 library(jsonlite)
@@ -33,13 +35,12 @@ instead of the BaseR apply family?",
 "5. Why can you name a variable sd in a function and 
 not cause any issues with the sd function?")
 
-#print the questions/list
-my_list1
+#This prints poorly, so it has been left out.
 ```
 
 ### Question 1
 
-lapply() is used to apply functions across many rows/columns and the "l" ensures R always outputs a list.
+`lapply()` is used to apply functions across many rows/columns and the "l" ensures R always outputs a list.
 
 ### Question 2
 
@@ -184,6 +185,7 @@ my_wrapper <- function(response, predicted, metrics = c("MAE", "RMSE"), ...) {
 ### Question 6
 
 Now let's test our wrapper function in a similar way that we tested our previous functions.
+
 ```{r}
 #create data
 set.seed(10)
