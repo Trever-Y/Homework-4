@@ -218,7 +218,10 @@ my_wrapper(resp, df1, metrics = c("MAE", "RMSE"), na.rm = TRUE)
 Let's query the newsapi for articles on war.
 
 ```{r}
-URL_ids <- "https://newsapi.org/v2/everything?q=war&from=2025-06-05&sortBy=popularity&apiKey=93563897e7a24afaaac43bd50c70d0af"
+#paste in 2 parts to keep the code from spilling over the page
+URL_ids <- paste0("https://newsapi.org/v2/everything?q=war&from=2025-06-05",
+"&sortBy=popularity&apiKey=93563897e7a24afaaac43bd50c70d0af") 
+
 id_info <- GET(URL_ids)
 
 #look at the structure
