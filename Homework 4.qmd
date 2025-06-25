@@ -5,14 +5,16 @@ format: pdf
 editor: visual
 ---
 
-### Load Packages
+
+## Task 1: Conceptual Questions
+
+### Load Packages and Create a List of Questions
 
 ```{r}
 library(tidyverse)
+library(httr)
+library(jsonlite)
 ```
-
-
-## Task 1: Conceptual Questions
 
 ```{r}
 #Create a list with the requested questions
@@ -210,14 +212,38 @@ my_wrapper(resp, df1, metrics = c("MAE", "RMSE"), na.rm = TRUE)
 
 ### Question 1
 
+```{r}
+URL_ids <- "https://newsapi.org/v2/everything?q=war&from=2025-06-25&sortBy=popularity&apiKey=93563897e7a24afaaac43bd50c70d0af"
+id_info <- GET(URL_ids)
+
+str(id_info, max.level = 1)
+
+```
+
 
 ### Question 2
+
+```{r}
+parsed_data <- fromJSON(rawToChar(id_info$content))
+as_tibble(parsed_data)
+```
 
 
 ### Question 3
 
+```{r}
+API_function <- function(title, date, key) {
+  
+}
+```
 
 
 ```{r}
-
+URL_ids <- "https://newsapi.org/v2/everything?q=gamestop&from=2025-05-27&sortBy=popularity&apiKey=93563897e7a24afaaac43bd50c70d0af"
+id_info <- GET(URL_ids)
+parsed_data <- fromJSON(rawToChar(id_info$content))
+as_tibble(parsed_data)
+str(id_info, max.level = 1)
+id_info$headers
 ```
+93563897e7a24afaaac43bd50c70d0af
